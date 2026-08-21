@@ -1088,12 +1088,13 @@ export class TransitSafetyManager {
     }
   }
 
-  renderDriverTransitHistory(
+ /**  renderDriverTransitHistory(
     container
   ) {
     let footprints =
       store.getDigitalFootprints() ||
       [];
+      
 
     footprints.sort(
       (a, b) =>
@@ -1106,7 +1107,77 @@ export class TransitSafetyManager {
             a.createdAt
         )
     );
+*/
+renderDriverTransitHistory(container) {
+  let footprints = store.getDigitalFootprints() || [];
 
+  /*
+   * IMPORTANT:
+   * A passenger gets one "active_trip" footprint when
+   * the driver QR handshake happens.
+   *
+   * After the trip finishes, another "completed" footprint
+   * is created with the actual amount paid.
+   *
+   * We remove ONLY the old active_trip record when a matching
+   * completed trip exists.
+   *
+   * We DO NOT filter by passenger name alone.
+   * Therefore:
+   *
+   * Passenger A - ₹50
+   * Passenger A - ₹100
+   *
+   * can both remain if they are genuinely different trips.
+   */
+
+  footprints = footprints.filter((footprint) => {
+
+    // Keep completed records
+    if (footprint.status !== "active_trip") {
+      return true;
+    }
+
+    // Look for the completed version of THIS exact trip
+    const matchingCompletedTrip = footprints.some((completed) => {
+
+      if (completed.status !== "completed") {
+        return false;
+      }
+
+      const samePassenger =
+        String(completed.passengerName || "").trim().toLowerCase() ===
+        String(footprint.passengerName || "").trim().toLowerCase();
+
+      const sameDriver =
+        (
+          completed.driverId &&
+          footprint.driverId &&
+          completed.driverId === footprint.driverId
+        ) ||
+        (
+          completed.vehicleRegNo &&
+          footprint.vehicleRegNo &&
+          completed.vehicleRegNo === footprint.vehicleRegNo
+        );
+
+      const sameRoute =
+        String(completed.route || "").trim().toLowerCase() ===
+        String(footprint.route || "").trim().toLowerCase();
+
+      return samePassenger && sameDriver && sameRoute;
+    });
+
+    // If completed version exists, hide the temporary active record.
+    // If it doesn't exist, keep the active record.
+    return !matchingCompletedTrip;
+  });
+
+  footprints.sort(
+    (a, b) =>
+      new Date(b.timestamp || b.createdAt) -
+      new Date(a.timestamp || a.createdAt)
+  );
     if (
       footprints.length === 0
     ) {
