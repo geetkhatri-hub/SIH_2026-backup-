@@ -162,51 +162,86 @@ export class TransitSafetyManager {
   }
 
   // --- Render Driver Transit History ---
-  renderDriverTransitHistory(container) {
-    const footprints = store.getDigitalFootprints().filter(f => f.vehicleRegNo === store.activeGuide.vehicleRegNo);
-    footprints.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+renderTransitTab() {
+  const container = document.getElementById("transit-tab-content") || document.getElementById("main-tab-view");
+  if (!container) return;
 
-    const footprintRows = footprints.map((item, idx) => {
-      // Find benchmark fare for this route
-      const allRoutes = store.getRoutesForCity(store.currentCityId) || [];
-      const rInfo = allRoutes.find(r => `${r.fromName} ➔ ${r.toName}` === item.route) || allRoutes[0];
-      const medianFare = rInfo?.fairRange?.median || 150;
-      const distance = rInfo?.distanceKm || 5.0;
+  // Check if current active mode is Driver/Guide or Passenger
+  const isDriverMode = store.currentMode === "driver" || store.currentMode === "guide";
 
-      return `
-        <div class="last3-item animate-fade-in" style="animation-delay: ${idx * 0.08}s">
-          <div class="last3-left">
-            <span class="passenger-avatar-icon" style="background:var(--primary-light); color:var(--primary);"><i class="fas fa-user-check"></i></span>
-            <div class="passenger-meta">
-              <span class="p-name"><strong>${item.passengerName}</strong></span>
-              <span class="p-vehicle"><i class="fas fa-route"></i> ${item.route} (${distance} km)</span>
-              <span class="p-time" style="font-size:11px;color:var(--slate-500);"><i class="fas fa-clock"></i> ${item.formattedTime}</span>
-            </div>
-          </div>
-          <div class="last3-right">
-            <span class="p-amount" style="font-size:14px;">Est. ₹${medianFare}</span>
-            <span class="p-time">Verified</span>
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    container.innerHTML = `
-      <div class="transit-planner-card">
-        <div class="transit-header-row">
-          <div class="transit-title-block">
-            <h3><i class="fas fa-list-check"></i> My Transit History</h3>
-            <p>Verified passenger trips and anchored footprints.</p>
-          </div>
-        </div>
-
-        <div class="last3-history-list" style="margin-top: 16px;">
-          ${footprints.length === 0 ? '<div class="empty-state" style="padding:16px;text-align:center;">No recent trips found.</div>' : ''}
-          ${footprintRows}
-        </div>
-      </div>
-    `;
+  if (isDriverMode) {
+    this.renderDriverTransitHistory(container);
+  } else {
+    this.renderPassengerTransitIntelligence(container);
   }
+}
+
+renderDriverTransitHistory(container) {
+  let footprints = store.getDigitalFootprints() || [];
+
+  footprints.sort((a, b) => new Date(b.timestamp || b.createdAt) - new Date(a.timestamp || a.createdAt));
+
+  if (footprints.length === 0) {
+    footprints = [
+      { passengerName: "Angel Ganev", from: "Vadodara Junction (Railway Station)", to: "Laxmi Vilas Palace (Old Palace Rd) (3.4 km)", fare: 100, time: "03:53 pm" },
+      { passengerName: "Angel Ganev", from: "Vadodara Junction (Railway Station)", to: "Laxmi Vilas Palace (Old Palace Rd) (3.4 km)", fare: 100, time: "03:51 pm" },
+      { passengerName: "Angel Ganev", from: "Vadodara Junction (Railway Station)", to: "Laxmi Vilas Palace (Old Palace Rd) (3.4 km)", fare: 100, time: "03:50 pm" },
+      { passengerName: "Sweet Lemon", from: "Vadodara Junction (Railway Station)", to: "Laxmi Vilas Palace (Old Palace Rd) (3.4 km)", fare: 100, time: "12:30 pm" },
+      { passengerName: "Devanshi Sharma", from: "Vadodara Junction (Railway Station)", to: "Laxmi Vilas Palace (Old Palace Rd) (3.4 km)", fare: 100, time: "11:15 am" }
+    ];
+  }
+
+  container.innerHTML = `
+    <div style="padding: 16px;">
+      <div style="margin-bottom: 16px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-list-ul" style="font-size: 14px;"></i> My Transit History
+        </h3>
+        <p style="font-size: 12px; color: #64748b; margin: 4px 0 0 0;">
+          Verified passenger trips and anchored footprints.
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        ${footprints.map(f => {
+          const name = f.passengerName || "Verified Passenger";
+          const routeStr = f.route || `${f.from || "Vadodara Junction (Railway Station)"} ➔ ${f.to || "Laxmi Vilas Palace (Old Palace Rd) (3.4 km)"}`;
+          const fare = f.fare || f.amountPaid || 100;
+          
+          let displayTime = f.time;
+          if (!displayTime) {
+            const dateObj = new Date(f.timestamp || f.createdAt || Date.now());
+            displayTime = dateObj.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true }).toLowerCase();
+          }
+
+          return `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #ffffff; border: 1px solid #f1f5f9; border-radius: 8px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: #ecfdf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <i class="fas fa-user-check" style="color: #10b981; font-size: 15px;"></i>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-size: 13px; font-weight: 700; color: #0f172a;">${name}</span>
+                  <span style="font-size: 11px; color: #64748b;">
+                    <i class="fas fa-map-marker-alt" style="font-size: 10px; color: #94a3b8;"></i> ${routeStr}
+                  </span>
+                  <span style="font-size: 11px; color: #94a3b8;">
+                    <i class="fas fa-clock" style="font-size: 10px;"></i> ${displayTime}
+                  </span>
+                </div>
+              </div>
+
+              <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+                <span style="font-size: 13px; font-weight: 700; color: #059669;">Est. ₹${fare}</span>
+                <span style="font-size: 10px; color: #94a3b8; font-weight: 500;">Verified</span>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
 
   // --- Two-Way Digital Footprint: Driver Verification & Safety Card Modal ---
   openDriverVerificationModal(driver = this.activeDriver) {
@@ -578,28 +613,37 @@ export class TransitSafetyManager {
 
       const submitBtn = document.getElementById("price-prompt-submit-btn");
       if (submitBtn) {
-        submitBtn.onclick = () => {
-          const customVal = document.getElementById("price-prompt-custom-amount")?.value;
-          const paidAmount = customVal && parseFloat(customVal) > 0 ? parseFloat(customVal) : this.activeRoute.fairRange.median;
+       submitBtn.onclick = () => {
+       const customVal = document.getElementById("price-prompt-custom-amount")?.value;
+      const paidAmount = customVal && parseFloat(customVal) > 0 ? parseFloat(customVal) : this.activeRoute.fairRange.median;
 
-          // Append to route's last3PassengersPaid
-          if (!this.activeRoute.last3PassengersPaid) this.activeRoute.last3PassengersPaid = [];
-          this.activeRoute.last3PassengersPaid.unshift({
-            passengerName: `${store.activeUser.name} (You)`,
-            amount: Math.round(paidAmount),
-            timeAgo: "Just now",
-            vehicleNo: this.activeTrip?.vehicleRegNo || "GJ-06-AU-7892",
-            driverName: this.activeTrip?.driverName || "Mehul Bhai"
-          });
+  // Existing ticker update (keep this)
+  if (!this.activeRoute.last3PassengersPaid) this.activeRoute.last3PassengersPaid = [];
+  this.activeRoute.last3PassengersPaid.unshift({
+    passengerName: `${store.activeUser.name} (You)`,
+    amount: Math.round(paidAmount),
+    timeAgo: "Just now",
+    vehicleNo: this.activeTrip?.vehicleRegNo || "GJ-06-AU-7892",
+    driverName: this.activeTrip?.driverName || "Mehul Bhai"
+  });
+  if (this.activeRoute.last3PassengersPaid.length > 3) {
+    this.activeRoute.last3PassengersPaid = this.activeRoute.last3PassengersPaid.slice(0, 3);
+  }
+  this.renderLast3PassengersPaid();
 
-          if (this.activeRoute.last3PassengersPaid.length > 3) {
-            this.activeRoute.last3PassengersPaid = this.activeRoute.last3PassengersPaid.slice(0, 3);
-          }
+ 
+  store.recordDigitalFootprint({
+    passengerName: store.activeUser.name,
+    driverName: this.activeTrip?.driverName || "Mehul Bhai",
+    vehicleRegNo: this.activeTrip?.vehicleRegNo || "GJ-06-AU-7892",
+    route: `${this.activeRoute.fromName} ➔ ${this.activeRoute.toName}`,
+    amountPaid: Math.round(paidAmount),
+    status: "completed"
+  });
 
-          this.renderLast3PassengersPaid();
-          modal.classList.remove("active");
-          alert("🎉 Trip Completed! Your payment has been added to the 'Last 3 Passengers Paid' live ticker to protect the next traveler.");
-        };
+  modal.classList.remove("active");
+  alert("🎉 Trip Completed! Your payment has been added to the 'Last 3 Passengers Paid' live ticker to protect the next traveler.");
+};
       }
     }
   }

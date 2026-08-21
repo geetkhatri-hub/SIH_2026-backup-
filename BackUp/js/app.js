@@ -314,14 +314,15 @@ class App {
       <div style="padding: 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0;">
         <h3 style="font-weight: 800; font-size: 18px; margin-bottom: 12px;"><i class="fas fa-user-circle"></i> ${isGuide ? 'Driver / Guide Profile' : 'Passenger Profile'}</h3>
         <div style="display: flex; flex-direction: column; gap: 8px;">
-          <div><strong>Name:</strong> ${profile.name}</div>
-          <div><strong>Phone:</strong> ${profile.phone}</div>
+          <div><strong>Name:</strong> ${profile.name || 'N/A'}</div>
+          <div><strong>Phone:</strong> ${profile.phone || 'N/A'}</div>
           ${isGuide ? `
-            <div><strong>Vehicle No:</strong> ${profile.vehicleRegNo}</div>
-            <div><strong>License:</strong> ${profile.licenseNo || profile.rtoLicenseNo}</div>
+            <div><strong>Vehicle No:</strong> ${profile.vehicleRegNo || 'N/A'}</div>
+            <div><strong>Aadhaar No:</strong> ${profile.aadharNo || 'Not Provided'}</div>
+            <div><strong>License:</strong> ${profile.licenseNo || profile.rtoLicenseNo || 'N/A'}</div>
           ` : `
-            <div><strong>Origin:</strong> ${profile.origin}</div>
-            <div><strong>Emergency Contact:</strong> ${profile.emergencyContact}</div>
+            <div><strong>Origin:</strong> ${profile.origin || 'N/A'}</div>
+            <div><strong>Emergency Contact:</strong> ${profile.emergencyContact || profile.emergency || 'N/A'}</div>
           `}
         </div>
         <button type="button" class="btn btn-outline btn-block" style="margin-top: 16px;" onclick="authManager.openAuthModal('${store.currentRole}')">
@@ -345,6 +346,9 @@ class App {
     const content = document.getElementById("handshake-success-content");
 
     if (modal && content) {
+      const aadharVal = store.activeGuide.aadharNo || record.aadharNo || "Not Provided";
+      const vehicleVal = store.activeGuide.vehicleRegNo || record.vehicleRegNo || "GJ-06-AU-7892";
+
       content.innerHTML = `
         <div class="verified-encounter-card animate-bounce-in">
           <div class="badge-shield-wrap">
@@ -356,8 +360,18 @@ class App {
             <img src="${store.activeGuide.photo}" alt="${record.guideName}" class="verified-guide-avatar">
             <div class="verified-guide-text">
               <h3>${record.guideName}</h3>
-              <p class="lic-tag"><i class="fas fa-id-badge"></i> License: <strong>${record.guideLicenseNo}</strong></p>
-              <p class="issuer-tag"><i class="fas fa-university"></i> ${record.guideIssuer}</p>
+              <p class="vehicle-badge-pill" style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 4px; display: inline-block; font-family: monospace; font-weight: bold; margin-bottom: 2px;">
+                <i class="fas fa-taxi"></i> Vehicle No: ${vehicleVal}
+              </p>
+              <p class="aadhar-tag" style="font-size: 11px; color: #64748b; margin-bottom: 6px; font-weight: 500;">
+                <i class="fas fa-id-card"></i> Aadhaar No: <strong>${aadharVal}</strong>
+              </p>
+              <p class="lic-tag" style="font-size: 13px; margin-bottom: 2px;">
+                <i class="fas fa-id-badge"></i> RTO License: <strong>${record.guideLicenseNo}</strong>
+              </p>
+              <p class="issuer-tag" style="font-size: 12px; color: #64748b;">
+                <i class="fas fa-university"></i> ${record.guideIssuer}
+              </p>
             </div>
           </div>
 
@@ -391,15 +405,15 @@ class App {
       `;
 
       modal.classList.add("active");
-
-      const proceedBtn = document.getElementById("proceed-to-review-btn");
-      if (proceedBtn) {
-        proceedBtn.onclick = (e) => {
-          e.preventDefault();
-          modal.classList.remove("active");
-          reviewsManager.renderGuideLedger();
-          this.switchTab("ledger");
-        };
+     const proceedBtn = document.getElementById("proceed-to-review-btn");
+if (proceedBtn) {
+  proceedBtn.onclick = (e) => {
+    e.preventDefault();
+    modal.classList.remove("active");
+    const targetGuideId = record.guideId || record.driverId || record.id || store.activeGuide.id;
+    reviewsManager.renderGuideLedger(targetGuideId, "guide-ledger-container");
+    this.switchTab("ledger");
+  };
       }
     }
   }

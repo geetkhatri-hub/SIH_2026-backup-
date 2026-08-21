@@ -17,7 +17,7 @@
 <body>
 
   <!-- Stage Control Bar -->
-  <header class="stage-control-bar">
+ <!-- <header class="stage-control-bar">
     <div class="stage-bar-left">
       <span class="stage-logo-badge">VERIDA</span>
       <span style="font-size:12px;color:#94a3b8;">Transit & Tourism Trust Protocol</span>
@@ -41,19 +41,15 @@
       </button>
     </div>
   </header>
-
+-->
   <!-- ===== SINGLE APP SHELL (Laptop + Mobile) ===== -->
   <div class="app-viewport-wrapper" id="single-app-shell">
 
     <header class="app-header">
       <div class="header-top-row">
-        <div class="brand-identity">
-          <div class="brand-icon"><i class="fas fa-shield-halved"></i></div>
-          <div>
-            <h1 class="brand-title">Verida</h1>
-            <span class="brand-tagline">Transit Safety & Trust Protocol</span>
-          </div>
-        </div>
+    <div class="brand-identity">
+          <img src="logo.jpeg" alt="Verida — Explore Safely, Discover More" class="brand-logo-full" >
+    </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <!-- Profile button opens login/register modal -->
           <button type="button" class="btn-profile-pill" id="header-profile-btn" title="Your Profile / Register">
@@ -414,6 +410,10 @@
           <div class="auth-field-group">
             <label class="auth-label"><i class="fas fa-file-contract"></i> RTO Driving License Number</label>
             <input type="text" id="reg-driver-lic" class="auth-input" placeholder="e.g. GJ-06-2018-009124">
+          </div>
+          <div class="auth-field-group">
+            <label class="auth-label"><i class="fas fa-file-contract"></i> Aadhar Card Number</label>
+            <input type="text" id="reg-adhar-no" class="auth-input" placeholder="e.g. 4150 4780 4150">
           </div>
           <div class="auth-field-group">
             <label class="auth-label"><i class="fas fa-taxi"></i> Vehicle Type</label>

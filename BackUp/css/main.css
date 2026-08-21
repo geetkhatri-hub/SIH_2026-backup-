@@ -184,6 +184,12 @@ body {
   align-items: center;
   gap: 10px;
 }
+.brand-logo-full {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
 
 .brand-icon {
   width: 36px;

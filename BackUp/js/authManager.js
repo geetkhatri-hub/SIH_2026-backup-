@@ -142,6 +142,7 @@ class AuthManager {
     const plate = document.getElementById("reg-driver-plate")?.value.trim().toUpperCase();
     const lic = document.getElementById("reg-driver-lic")?.value.trim();
     const vehicleType = document.getElementById("reg-driver-type")?.value;
+    const aadharNo = document.getElementById("reg-adhar-no")?.value.trim();
 
     if (!name) {
       this._flashError("reg-driver-name", "Please enter driver name.");
@@ -152,7 +153,15 @@ class AuthManager {
       return;
     }
 
-    const profile = { name, phone, vehicleRegNo: plate, licenseNo: lic, vehicleType, createdAt: new Date().toISOString() };
+    const profile = {
+      name,
+      phone,
+      vehicleRegNo: plate,
+      licenseNo: lic,
+      vehicleType,
+      aadharNo,
+      createdAt: new Date().toISOString()
+    };
 
     // Use store.registerDriver so it persists to the correct localStorage key
     store.registerDriver(profile);
@@ -231,6 +240,7 @@ class AuthManager {
     set("reg-driver-plate", d.vehicleRegNo);
     set("reg-driver-lic", d.licenseNo);
     set("reg-driver-type", d.vehicleType);
+    set("reg-adhar-no", d.aadharNo);
   }
 
   /* ============================================================

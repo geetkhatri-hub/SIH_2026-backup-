@@ -486,12 +486,32 @@ class Store {
     return record;
   }
 
-  hasHandshakeWithGuide(guideId, travelerId = this.activeUser.uid) {
+hasHandshakeWithGuide(guideId, travelerId = this.activeUser.uid) {
     const handshakes = this.getHandshakes();
-    return handshakes.some(h => 
-      (h.guideId === guideId || h.vehicleRegNo === guideId) && 
-      (h.travelerId === travelerId || h.travelerId === "trv-demo-01" || h.passengerName === this.activeUser.name)
-    );
+    if (!handshakes || handshakes.length === 0) return false;
+
+    const targetGuide = this.getGuideById(guideId);
+    const targetName = targetGuide?.name || targetGuide?.guideName || guideId;
+    const targetVehicle = targetGuide?.vehicleRegNo;
+
+    return handshakes.some(h => {
+      // Match Driver / Guide
+      const matchesGuide = 
+        h.guideId === guideId ||
+        h.guideId === targetGuide?.id ||
+        h.guideId === targetGuide?.uid ||
+        (targetName && h.guideName === targetName) ||
+        (targetVehicle && h.vehicleRegNo === targetVehicle);
+
+      // Match Passenger / User
+      const matchesUser = 
+        h.travelerId === travelerId ||
+        h.travelerId === this.activeUser.uid ||
+        h.passengerName === this.activeUser.name ||
+        h.travelerName === this.activeUser.name ; // Any completed handshake with this guide unlocks access
+
+      return matchesGuide && matchesUser;
+    });
   }
 
   // --- Price Pulse Engine ---
@@ -569,11 +589,24 @@ class Store {
     return filtered.length > 0 ? filtered : SEED_DRIVERS;
   }
 
-  async recordDigitalFootprint(footprintData) {
-    return await hybridStore.addDocument("digitalFootprints", {
-      ...footprintData,
-      createdAt: Date.now()
-    });
+ async recordDigitalFootprint(footprintData) {
+    const activeDriver = this.activeGuide || this.activeDriver;
+    
+    const enrichedFootprint = {
+      id: `fp_${Date.now()}`,
+      passengerName: footprintData.passengerName || this.activeUser.name,
+      driverId: footprintData.driverId || activeDriver?.id || activeDriver?.uid,
+      driverName: footprintData.driverName || activeDriver?.name,
+      vehicleRegNo: footprintData.vehicleRegNo || activeDriver?.vehicleRegNo || "GJ-06-AU-7892",
+      route: footprintData.route || "Vadodara Transit Route",
+      amountPaid: footprintData.amountPaid || footprintData.fare || 50,
+      footprintHash: footprintData.footprintHash || `0x${Math.random().toString(16).substring(2, 10)}`,
+      timestamp: Date.now(),
+      createdAt: new Date().toISOString(),
+      ...footprintData
+    };
+
+    return await hybridStore.addDocument("digitalFootprints", enrichedFootprint);
   }
 
   getDigitalFootprints() {
