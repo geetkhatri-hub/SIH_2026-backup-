@@ -1,141 +1,580 @@
-# Verida — On-the-Spot Tourism Trust & Presence Protocol
+# 🛡️ Verida
+## On-the-Spot Tourism & Transit Trust Protocol
 
-> *"Every existing platform protects you if you booked through them. We protect you when you didn't — because that's when almost every real scam in India actually happens: unbooked, in-person, in cash. Our trust layer runs on physical proximity and GPS proof, not on booking IDs."*
+> Turning uncertain street-level tourism interactions into verified, data-backed transactions.
 
----
-
-## 🌟 The Core Problem & The Unique Angle
-Major platforms (Viator, GetYourGuide, Klook) are pre-booking marketplaces. But real tout scams happen **on the spot, in cash, with zero booking** at the monument gate or street corner.
-
-**Verida** provides instant, 5-second on-the-spot verification, proof-of-presence reviews, live price intelligence, and computer vision to safeguard unbooked interactions.
+[🌐 **LIVE DEMO**](https://verida-alpha.vercel.app/) ·
+[📄 **SIH 2026 PDF**](./Verida_SIH2026_TemplateBased.pdf) ·
+[📊 **SIH 2026 PPTX**](./Verida_SIH2026_TemplateBased.pptx)
 
 ---
 
-## 🚀 Key Features
+## 🌐 Live Demo
 
-| Feature | What It Does | Why It's Unique |
-| :--- | :--- | :--- |
-| **1. Digital Handshake** | Rotating dynamic QR on guide's phone + sub-second camera scan & GPS proximity check. | Establishes a verified encounter record on the spot in <5s. 15s token rotation prevents screenshot reuse. |
-| **2. Proof-of-Presence Reviews** | Reviews are cryptographically gated behind an actual verified handshake at that physical coordinate. | Impossible to fake online reviews or astroturf without physical presence proof. |
-| **3. Live Price Pulse** | 3-second post-handshake prompt feeds a rolling real-time ticker of what travelers recently paid. | Real-time crowdsourced fair market rates instead of outdated static price boards. |
-| **4. Point-and-Check Price Camera** | Snaps a photo of handwritten chits, menus, or quotes and runs client-side OCR (Tesseract.js). | Instant **Red / Yellow / Green** safety verdict + negotiation counter-offer coaching. |
-| **5. Scam Hotspot Radar** | Interactive Leaflet map with geofenced alert zones ("Waze for touts"). | Pushes proactive warning banners to tourists before they get approached in tout hubs. |
-| **6. Guide Portfolio Ledger** | Chronological timeline of GPS-verified encounters with verified ASI/State Tourism license badges. | Replaces easily faked star ratings with an immutable physical encounter record. |
-| **7. Tourist Police Evidence Packet** | 1-Tap SOS compiles GPS, timestamp, scanned guide license, and photo evidence into a certified dossier. | Instant dispatch to Tourist Police Helpline (**1363 / 112**) or printable PDF dossier for police desks. |
+### [Open Verida Prototype →](https://verida-alpha.vercel.app/)
 
----
+The current prototype demonstrates:
 
-## 📍 Vadodara, Gujarat Focus & Seed Coverage
+- 🔐 Digital Handshake & QR verification
+- 💰 Route Fare Intelligence
+- 📍 Scam Hotspot Radar
+- 🚕 Driver / Guide Verification
+- 🧾 Proof-of-Presence Ledger
+- 🆘 Tourist Safety / SOS Evidence Dossier
+- 📱 Responsive mobile interface
 
-Verida includes comprehensive seed data and fair price intelligence for **Vadodara, Gujarat**:
-
-- **Heritage Landmarks**:
-  - *Laxmi Vilas Palace* (Grand Indo-Saracenic royal residence, 4× size of Buckingham Palace)
-  - *Kirti Mandir* (Maharaja Sayajirao Gaekwad III memorial)
-  - *Mandvi Gate* & Old Textile Bazaars
-  - *Nyaya Mandir* (Byzantine-Gothic architectural landmark)
-  - *Maharaja Fateh Singh Museum* (Raja Ravi Varma paintings)
-  - *Baroda Museum & Picture Gallery* (Sayaji Baug)
-- **Gardens & Lakes**:
-  - *Sayaji Baug (Kamati Baug)* (Zoo, planetarium, floral clock)
-  - *Sursagar Lake* (Central lake with 120ft golden Shiva statue)
-  - *Ajwa Lake, Musical Gardens & Water Park*
-  - *Vishwamitri Riverfront & Narmada Canal Garden*
-- **Temples & Spiritual Sites**:
-  - *EME Temple (Dakshinamurti)* (Geodesic aluminum dome managed by Indian Army)
-  - *ISKCON Temple Vadodara*
-  - *Pavagadh Hill & Kalika Mata Temple*
-- **Cultural & Food Hubs**:
-  - *MS University Faculty of Fine Arts*
-  - *United Way & Akota Stadium Navratri Garba Grounds*
-  - *Raopura & Lehripura* (Shree Mahakali Sev Usal, Pyarelal Bhakarwadi)
-- **Day Trips**:
-  - *Champaner-Pavagadh Archaeological Park* (UNESCO World Heritage Site)
-  - *Statue of Unity & Kevadia* (World's tallest statue, 90 km away)
-  - *Jambughoda Wildlife Sanctuary*
-
-*Also includes national seeds for Agra (Taj Mahal, Agra Fort), Delhi (Red Fort, Qutub Minar), and Jaipur (Hawa Mahal).*
+> **Note:** This is currently a temporary Vercel deployment for demonstration and evaluation.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 📄 SIH 2026 Submission
 
-- **Frontend**: Clean Vanilla HTML5 + Modern CSS3 Design System (Emerald Trust & Deep Slate Palette) + ES6 Modules.
-- **Computer Vision / OCR**: `Tesseract.js` running in-browser via WebWorkers (zero server round-trips).
-- **QR Engine**: `html5-qrcode` camera scanner + Canvas dynamic rotating QR generator with SHA-256 token hashing.
-- **Mapping & Geofencing**: `Leaflet.js` & OpenStreetMap with Haversine distance geofence calculations.
-- **Database & Hosting**: **Google Firebase (Firestore + Authentication + Firebase Hosting)** with local IndexedDB/LocalStorage hybrid offline resilience.
+| Resource | Link |
+|---|---|
+| 🌐 **Live Prototype** | [Open Demo](https://verida-alpha.vercel.app/) |
+| 📄 **SIH 2026 Idea Presentation – PDF** | [View / Download PDF](./Verida_SIH2026_TemplateBased.pdf) |
+| 📊 **SIH 2026 Idea Presentation – PPTX** | [Download PPTX](./Verida_SIH2026_TemplateBased.pptx) |
 
 ---
 
-## ⚡ Getting Started Locally
+# 🚀 About Verida
 
-### 1. Start Local Development Server:
+Verida is a real-time tourism safety and trust platform designed for situations where travelers interact with unknown drivers, guides, and local service providers on the spot, without advance booking.
+
+## Core Idea
+
+> **Verify who you meet. Know what you should pay. Understand the local risk. Create proof if something goes wrong.**
+
+---
+
+# 🎯 Problem
+
+Tourists can face uncertainty during spontaneous local interactions:
+
+- ❌ Unknown driver or guide identity
+- ❌ Unclear or inflated fares
+- ❌ Tourist-targeted scams and touts
+- ❌ Limited trust in real-world reviews
+- ❌ Difficulty documenting disputes
+- ❌ Limited support during an emergency
+
+Verida brings verification, pricing context, location awareness, encounter records and incident evidence into one platform.
+
+---
+
+# 💡 Proposed Solution
+
+## 🔐 1. Digital Handshake
+
+Passengers can verify a driver or guide using a GPS-linked rotating QR code.
+
+The prototype uses a verification flow involving:
+
+- Driver / guide identity
+- Vehicle / license information
+- GPS proximity
+- Timestamp
+- Short-lived rotating QR tokens
+- Verified encounter records
+
+This is designed to convert an anonymous interaction into a verifiable encounter.
+
+---
+
+## 💰 2. Route Fare Intelligence
+
+Verida provides route-level pricing context using recent passenger payment data.
+
+### Example
+
+**Vadodara Railway Station → Laxmi Vilas Palace**
+
+```text
+Recent payments:
+₹100 • ₹90 • ₹100
+
+Fair benchmark:
+₹80–₹100
+```
+
+This helps passengers identify potentially unreasonable quotes before accepting a ride.
+
+---
+
+## 📍 3. Scam Hotspot Radar
+
+Verida identifies locations with known scam or tout activity and provides proactive safety information.
+
+The prototype includes examples such as:
+
+- Railway station tout zones
+- Fake guide locations
+- Overcharging hotspots
+- Tourist-targeted ticket scams
+- Unofficial service providers
+
+---
+
+## 🧾 4. Proof-of-Presence Ledger
+
+Instead of relying only on anonymous reviews, Verida connects reputation with a verified encounter.
+
+```text
+Passenger
+    ↓
+Driver / Guide
+    ↓
+Location
+    ↓
+Timestamp
+    ↓
+Verification Token
+    ↓
+Review / Encounter Record
+```
+
+This creates a stronger basis for trust.
+
+---
+
+## 🆘 5. Tourist Safety SOS
+
+When an incident occurs, Verida can generate a structured evidence dossier containing information such as:
+
+- Incident category
+- Suspected operator
+- License / vehicle information
+- Location
+- Quoted price
+- Incident description
+- Available verification evidence
+
+The goal is to make an incident easier to document and report.
+
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+- HTML5
+- CSS3
+- JavaScript ES Modules
+
+## APIs & Libraries
+
+- Google Maps JavaScript API
+- QRCode.js
+- html5-qrcode
+- Tesseract.js
+- Canvas Confetti
+
+## Backend / Deployment
+
+- Node.js
+- Firebase Hosting
+- Cloud Firestore
+- Firestore Security Rules
+
+---
+
+# 🧠 How It Works
+
+```text
+        TOURIST ARRIVES
+              ↓
+        Select Route
+              ↓
+     Check Fare Intelligence
+              ↓
+       Scan Driver QR
+              ↓
+  Verify Identity + Proximity
+              ↓
+      DIGITAL HANDSHAKE
+              ↓
+         Ride / Service
+              ↓
+      Review + Ledger Entry
+              ↓
+       SOS IF REQUIRED
+```
+
+---
+
+# 🔄 Passenger Flow
+
+```text
+Open Verida
+     ↓
+GPS / Location
+     ↓
+Route Selection
+     ↓
+Fare Benchmark
+     ↓
+Driver Verification
+     ↓
+Verified Encounter
+     ↓
+Trip / Service
+     ↓
+Review
+```
+
+---
+
+# 🚕 Driver / Guide Flow
+
+```text
+Register Profile
+      ↓
+Vehicle / License Details
+      ↓
+Generate Rotating QR
+      ↓
+Passenger Scans QR
+      ↓
+Identity / Proximity Check
+      ↓
+Verified Encounter
+      ↓
+Trust Ledger
+```
+
+---
+
+# 🌍 Prototype Coverage
+
+The current prototype contains tourism and safety seed data for:
+
+- 🇮🇳 Vadodara, Gujarat
+- 🇮🇳 Agra, Uttar Pradesh
+- 🇮🇳 Delhi NCR
+- 🇮🇳 Jaipur, Rajasthan
+
+The dataset includes:
+
+- Tourism locations
+- Transit routes
+- Fare benchmarks
+- Recent passenger payment examples
+- Verified guides
+- Scam hotspots
+- Price-pulse examples
+
+---
+
+# 🧪 Example Scenario
+
+### Vadodara Railway Station → Laxmi Vilas Palace
+
+A tourist is quoted:
+
+```text
+₹450
+```
+
+The prototype compares this against a fair benchmark:
+
+```text
+₹80–₹120
+```
+
+The traveler can then:
+
+```text
+Check fare
+   ↓
+Verify driver
+   ↓
+Accept / reject ride
+   ↓
+Record encounter
+```
+
+---
+
+# ✨ Innovation
+
+## What makes Verida different?
+
+### Traditional travel platforms
+
+```text
+BOOK → TRAVEL → REVIEW
+```
+
+### Verida
+
+```text
+MEET → VERIFY → CHECK PRICE → TRAVEL → PROVE
+```
+
+Verida focuses on **unbooked, real-world interactions** where conventional booking-based trust mechanisms may not apply.
+
+### Key innovations
+
+- 🔐 Short-lived rotating verification QR
+- 📍 Location-aware verification
+- 💰 Real-world fare intelligence
+- 🧾 Proof-of-presence reputation
+- 🚨 Scam hotspot awareness
+- 🆘 Structured incident evidence
+
+---
+
+# 📊 Feasibility
+
+## MVP Feasibility: High
+
+The prototype demonstrates the main user-facing flows.
+
+### Existing prototype capabilities
+
+- Responsive web application
+- Passenger mode
+- Driver / Guide mode
+- QR verification flow
+- Route fare interface
+- Hotspot radar
+- Encounter ledger
+- SOS workflow
+- Dual-screen presentation mode
+- Multi-city seed data
+
+### Production Roadmap
+
+The next stage would add:
+
+- Secure backend synchronization
+- Production authentication
+- Live government/RTO verification
+- Real-time data pipelines
+- Stronger privacy controls
+- Scalable cloud infrastructure
+
+---
+
+# ⚠️ Challenges & Risks
+
+### Data Accuracy
+Incorrect fare or hotspot information could reduce user trust.
+
+### Privacy
+Verida may process identity, location and incident-related information.
+
+### Driver Adoption
+Informal drivers may be hesitant to register.
+
+### Connectivity
+Tourists may experience poor network coverage.
+
+### Identity Fraud
+Stolen credentials or QR sharing could create false verification.
+
+### Government Integration
+Official verification requires cooperation with relevant authorities.
+
+---
+
+# 🛡️ Mitigation Strategies
+
+- Use rotating, short-lived QR tokens
+- Combine QR + GPS + timestamp signals
+- Introduce data-confidence and moderation systems
+- Minimize personal data collection
+- Apply secure backend authorization
+- Provide a zero-app / plate-based driver flow
+- Partner with tourism departments and transport authorities
+- Design for offline-tolerant operation
+
+---
+
+# 🌱 Impact
+
+## 👥 Social
+
+- Safer tourism experiences
+- Greater confidence for travelers
+- Better accountability
+
+## 💰 Economic
+
+- Reduces tourist overcharging
+- Supports legitimate local drivers and guides
+- Builds trust in local tourism services
+
+## 🧳 Tourism
+
+- Improves visitor experience
+- Encourages responsible tourism
+- Strengthens destination reputation
+
+## 🚨 Safety
+
+- Faster identity verification
+- Proactive scam awareness
+- Better incident documentation
+
+---
+
+# 🔮 Future Scope
+
+### Phase 1
+Expand the pilot to major Indian tourist destinations.
+
+### Phase 2
+Integrate official RTO / tourism verification systems.
+
+### Phase 3
+Introduce AI-assisted:
+
+- Scam detection
+- Fare anomaly detection
+- Risk prediction
+- Incident classification
+
+### Phase 4
+Create dashboards for:
+
+- Tourism authorities
+- Tourist police
+- Transport operators
+- Verified service providers
+
+### Long-Term Vision
+
+> **Build India's trusted digital safety layer for spontaneous tourism interactions.**
+
+---
+
+# 📚 Research & References
+
+1. **Ministry of Tourism, Government of India**  
+   India Tourism Data & Tourism Data Compendium  
+   https://data.tourism.gov.in/
+
+2. **UN Tourism**  
+   International Code for the Protection of Tourists  
+   https://www.unwto.org/
+
+3. **Government of India**  
+   Digital Personal Data Protection Act, 2023  
+   https://www.indiacode.nic.in/
+
+4. **OWASP**  
+   Mobile Application Security  
+   https://mas.owasp.org/
+
+5. **Google Maps Platform**  
+   Maps JavaScript API  
+   https://developers.google.com/maps/documentation/javascript
+
+6. **Firebase**  
+   Cloud Firestore Security Rules  
+   https://firebase.google.com/docs/firestore/security/get-started
+
+---
+
+# 📁 Project Structure
+
+```text
+Verida/
+│
+├── index.html
+├── app.js
+├── authManager.js
+├── seedData.js
+├── server.js
+│
+├── main.css
+├── components.css
+├── responsive.css
+│
+├── firebase.json
+├── firestore.rules
+├── package.json
+│
+├── Verida_SIH2026_TemplateBased.pdf
+├── Verida_SIH2026_TemplateBased.pptx
+│
+└── README.md
+```
+
+> Some supporting application modules referenced by `app.js` are not included in the current uploaded source set. The repository should therefore be treated as a **SIH 2026 prototype/demo**, not as a final production deployment.
+
+---
+
+# ▶️ Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR-USERNAME/verida-tourism-trust.git
+cd verida-tourism-trust
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the application
+
 ```bash
 npm start
-# or:
-npx -y serve . -p 3000
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 4. Open in your browser
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## 🚀 Firebase Deployment Instructions
+# 📌 SIH 2026
 
-### Step 1. Install Firebase CLI (if not already installed)
-```bash
-npm install -g firebase-tools
-# or run via npx:
-npx -y firebase-tools login
-```
-
-### Step 2. Login to Firebase
-```bash
-firebase login
-```
-
-### Step 3. Initialize / Select Your Firebase Project
-```bash
-firebase use --add
-# Select your Firebase project ID
-```
-
-### Step 4. Deploy Hosting and Security Rules
-```bash
-# Deploy both Hosting and Firestore Rules
-firebase deploy
-
-# Or deploy individually:
-firebase deploy --only hosting
-firebase deploy --only firestore:rules
-```
-
-Once deployed, your app will be live globally on `https://<your-project-id>.web.app` with SSL, fast CDN caching, and Firestore security rules active!
+**Event:** Smart India Hackathon 2026  
+**Project:** Verida  
+**Category:** Software  
+**Theme:** Travel & Tourism  
+**Team Name:** FLUX
+**Problem Statement ID:** YOUR PS ID  
+**Problem Statement Title:** YOUR PS TITLE
 
 ---
 
-## 🎤 3-Minute Hackathon Live Stage Demo Script
+# 🔗 Important Links
 
-1. **The Hook (0:00 - 0:30)**:
-   > *"Every existing app protects you when you pre-book online. But 90% of tourist scams in India happen unbooked, in cash, on the street. Verida brings instant trust to the exact moment you meet a stranger."*
+### 🌐 Live Prototype
+https://verida-alpha.vercel.app/
 
-2. **The 5-Second Digital Handshake (0:30 - 1:15)**:
-   - Switch to **Dual Stage View** at top right.
-   - Point out Guide device on right with 15-second rotating QR token.
-   - Tap **"Execute Instant Handshake"** on Traveler device.
-   - Watch the GPS proximity match (<5m) and verified ASI / Gujarat Tourism credential badge appear with confetti.
+### 📄 SIH 2026 Presentation – PDF
+[Verida SIH 2026 PDF](./Verida_SIH2026_TemplateBased.pdf)
 
-3. **3-Second Price Pulse (1:15 - 1:45)**:
-   - Tap `₹100 (Standard)` on the post-handshake prompt.
-   - Show the Live Price Pulse ticker update immediately.
+### 📊 SIH 2026 Presentation – PPTX
+[Verida SIH 2026 PPTX](./Verida_SIH2026_TemplateBased.pptx)
 
-4. **Point-and-Check Price Camera (1:45 - 2:30)**:
-   - Click **"Snap Auto Chit (₹450 Overcharge Alert)"**.
-   - Watch Tesseract OCR extract the number and trigger the **🚨 RED FLAG** alert with negotiation coaching.
+---
 
-5. **Tourist Police Evidence Dossier (2:30 - 3:00)**:
-   - Tap **SOS** button.
-   - Present the certified, tamper-evident Incident Dossier with GPS coordinates, guide license ID, and direct 1363 dialer.
+# 👥 Team
 
+**Team Name:** YOUR TEAM NAME
 
-i made a change 
+**Team Members:**
+
+- Member 1 — Role
+- Member 2 — Role
+- Member 3 — Role
+- Member 4 — Role
+- Member 5 — Role
+- Member 6 — Role
+
+---
+
+## ⭐ Verida in One Sentence
+
+> **Verida transforms uncertain, street-level tourism interactions into verified, transparent and safer experiences.**
