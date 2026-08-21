@@ -308,6 +308,8 @@ class Store {
       lat: 22.2937, // Laxmi Vilas Palace default
       lng: 73.1916,
       name: "Laxmi Vilas Palace, Vadodara",
+      fromLocation: "", // Fix: Explicit From location
+      toLocation: "",
       accuracy: 5
     };
     this.isSimulatedGps = true;
@@ -342,14 +344,43 @@ class Store {
     this.initSeedData();
   }
 
-  loadSavedProfiles() {
+loadSavedProfiles() {
     try {
       const savedUser = localStorage.getItem("verida_user_profile");
-      if (savedUser) this.activeUser = JSON.parse(savedUser);
+      if (savedUser) this.activeUser = { ...this.activeUser, ...JSON.parse(savedUser) };
+      
       const savedGuide = localStorage.getItem("verida_guide_profile");
-      if (savedGuide) this.activeGuide = JSON.parse(savedGuide);
+      if (savedGuide) this.activeGuide = { ...this.activeGuide, ...JSON.parse(savedGuide) };
     } catch (e) {
       console.warn("[Verida Store] Profile load error:", e);
+    }
+  }
+  setFromLocation(fromName, coords = null) {
+    this.currentLocation.fromLocation = fromName;
+    if (coords) {
+      this.currentLocation.lat = coords.lat;
+      this.currentLocation.lng = coords.lng;
+    }
+    console.log("[Verida Store] Explicit From Location updated:", fromName);
+    this._notifyLocationChange();
+  }
+
+  setToLocation(toName) {
+    this.currentLocation.toLocation = toName;
+    console.log("[Verida Store] Explicit To Location updated:", toName);
+    this._notifyLocationChange();
+  }
+
+  setRouteLocations(fromName, toName) {
+    this.currentLocation.fromLocation = fromName;
+    this.currentLocation.toLocation = toName;
+    console.log(`[Verida Store] Explicit Route set: ${fromName} ➔ ${toName}`);
+    this._notifyLocationChange();
+  }
+
+  _notifyLocationChange() {
+    if (typeof window !== "undefined" && window.veridaApp?.renderApp) {
+      window.veridaApp.renderApp();
     }
   }
 
@@ -401,34 +432,31 @@ class Store {
     return SEED_CITIES[this.currentCityId] || SEED_CITIES.vadodara;
   }
 
-  setCity(cityId) {
+setCity(cityId) {
     if (SEED_CITIES[cityId]) {
       this.currentCityId = cityId;
       const city = SEED_CITIES[cityId];
-      // Pick first monument in city for default location
-      const firstMonument = this.getMonumentsForCity(cityId)[0];
-      if (firstMonument) {
-        this.currentLocation = {
-          lat: firstMonument.lat,
-          lng: firstMonument.lng,
-          name: `${firstMonument.name}, ${city.name}`,
-          accuracy: 5
-        };
-      } else {
-        this.currentLocation = {
-          lat: city.center.lat,
-          lng: city.center.lng,
-          name: `${city.name} City Center`,
-          accuracy: 10
-        };
-      }
-      // Update active guide for city
+      
+      this.currentLocation = {
+        ...this.currentLocation,
+        lat: city.center.lat,
+        lng: city.center.lng,
+        name: `${city.name} City Center`
+        // Note: fromLocation and toLocation are NOT overwritten automatically here
+      };
+
       const cityGuides = this.getGuidesForCity(cityId);
       if (cityGuides.length > 0) {
-        this.activeGuide = { ...cityGuides[0], uid: cityGuides[0].id };
+        this.activeGuide = {  ...cityGuides[0], uid: cityGuides[0].id };
       }
     }
-  }
+        
+      // Force UI updates if app instance exists
+      if (typeof window !== "undefined" && window.veridaApp?.renderApp) {
+        window.veridaApp.renderApp();
+      }
+}
+  
 
   getMonumentsForCity(cityId = this.currentCityId) {
     const all = hybridStore.getCollection("monuments");

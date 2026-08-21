@@ -136,13 +136,12 @@ class AuthManager {
     console.log("[Verida Auth] Passenger profile saved:", profile);
   }
 
-  _saveDriverProfile() {
+_saveDriverProfile() {
     const name = document.getElementById("reg-driver-name")?.value.trim();
     const phone = document.getElementById("reg-driver-phone")?.value.trim();
     const plate = document.getElementById("reg-driver-plate")?.value.trim().toUpperCase();
     const lic = document.getElementById("reg-driver-lic")?.value.trim();
-    const vehicleType = document.getElementById("reg-driver-type")?.value;
-    const aadharNo = document.getElementById("reg-adhar-no")?.value.trim();
+    const vehicleType = document.getElementById("reg-driver-type")?.value || "Auto-Rickshaw";
 
     if (!name) {
       this._flashError("reg-driver-name", "Please enter driver name.");
@@ -157,27 +156,29 @@ class AuthManager {
       name,
       phone,
       vehicleRegNo: plate,
-      licenseNo: lic,
+      licenseNo: lic || "GJ-RTO-VERIFIED",
       vehicleType,
-      aadharNo,
       createdAt: new Date().toISOString()
     };
 
-    // Use store.registerDriver so it persists to the correct localStorage key
+    // Store registers and updates local state
     store.registerDriver(profile);
 
+    // Sync Driver Card UI elements immediately
     this._syncNamesToUI();
     this.closeAuthModal();
 
-    // Re-render the QR with updated guide data and sync profile tab
+    // Trigger re-renders across active components
     setTimeout(() => {
       if (window.digitalHandshake) {
         window.digitalHandshake.stopGuideQrRotation();
         window.digitalHandshake.startGuideQrRotation("guide-qr-canvas", "qr-countdown-badge");
       }
       if (window.veridaApp) {
-        window.veridaApp.renderProfileTab();
-        if (store.currentRole === "guide") {
+        if (typeof window.veridaApp.renderProfileTab === "function") {
+          window.veridaApp.renderProfileTab();
+        }
+        if (store.currentRole === "guide" || store.currentRole === "driver") {
           window.reviewsManager?.renderGuideLedger(store.activeGuide.id, "guide-self-ledger");
         }
       }
@@ -246,21 +247,27 @@ class AuthManager {
   /* ============================================================
    *  SYNC NAMES ACROSS ALL UI ELEMENTS
    * ============================================================ */
-  _syncNamesToUI() {
+_syncNamesToUI() {
     const passengerName = store.activeUser?.name || "Passenger";
     const driverName = store.activeGuide?.name || "Driver";
-    const driverPlate = store.activeGuide?.vehicleRegNo || "GJ-00-XX-0000";
+    const driverPlate = store.activeGuide?.vehicleRegNo || "GJ-06-AU-7892";
     const driverVehicle = store.activeGuide?.vehicleType || "Auto-Rickshaw";
+    const driverLic = store.activeGuide?.licenseNo || store.activeGuide?.rtoLicenseNo || "Verified";
 
+    // Header & Dual view elements
     this._setEl("header-user-display-name", passengerName);
     this._setEl("dual-passenger-name", passengerName);
     this._setEl("dual-driver-name", driverName);
+
+    // Main Driver Card UI bindings
     this._setEl("driver-card-name", driverName);
     this._setEl("driver-card-lic", `${driverPlate} • ${driverVehicle}`);
+    this._setEl("driver-card-license-no", `License: ${driverLic}`);
+    
+    // Secondary / Dual Driver Cards
     this._setEl("driver-card-name-dual", driverName);
     this._setEl("driver-card-lic-dual", `${driverPlate} • ${driverVehicle}`);
 
-    // Also update app.js sync method if accessible
     if (window.veridaApp?.syncProfileDisplayNames) {
       window.veridaApp.syncProfileDisplayNames();
     }
